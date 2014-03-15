@@ -32,12 +32,12 @@ h3, h4, h5, h6 {
   color:#494949;
 }
 
-a {
+/*a {
   color:#39c;
   font-weight:400;
   text-decoration:none;
 }
-
+*/
 a small {
   font-size:11px;
   color:#777;
@@ -45,8 +45,16 @@ a small {
   display:block;
 }
 
+header a {
+  font-size: 12px
+}
+
+.roundrect {
+  border-radius: 100px;
+}
+
 .wrapper {
-  width:860px;
+  width:750px;
   margin:0 auto;
 }
 
@@ -228,7 +236,8 @@ footer {
   }
   
   header ul, header p.view {
-    position:static;
+    position:static
+    color: white
   }
   
   pre, code {
@@ -253,3 +262,5 @@ footer {
     color:#444;
   }
 }
+
+
