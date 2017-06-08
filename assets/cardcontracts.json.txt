@@ -1,0 +1,302 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0",
+		"contact": {
+			"name": "CardContracts"
+		},
+		"license": {}
+	},
+	"host": "secure.eurocard.se",
+	"basePath": "/api/cardcontracts/v1",
+	"tags": [{
+			"name": "card-contracts-controller",
+			"description": "Card Contracts Controller"
+		}
+	],
+	"path": {
+		"/": {
+			"get": {
+				"tags": ["card-contracts-controller"],
+				"summary": "cardContracts",
+				"description": "Customers cardcontracts and account details when available",
+				"operationId": "cardContracts",
+				"consumes": ["application/json"],
+				"produces": ["application/json;charset=UTF-8"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/CardContractsResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					},
+					"404": {
+						"description": "Not Found"
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"CardContractsResponse": {
+			"type": "object",
+			"properties": {
+				"error": {
+					"$ref": "#/definitions/error"
+				},
+				"cardAccounts": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CardAccount"
+					}
+				},
+				"cardContracts": {
+					"type": "array",
+					"example": "Customer card accounts - customer cards - Customer user details",
+					"description": "List with Customer card account details",
+					"items": {
+						"$ref": "#/definitions/CardContract"
+					}
+				},
+				"user": {
+					"description": "Customer Name",
+					"$ref": "#/definitions/User"
+				}
+			},
+			"description": "Carrier object for arrangement information"
+		},
+		"User": {
+			"type": "object",
+			"required": ["birthName", "givenName"],
+			"properties": {
+				"birthName": {
+					"type": "string",
+					"example": "Rocard",
+					"description": "Surname"
+				},
+				"givenName": {
+					"type": "string",
+					"example": "Eric",
+					"description": "given name (first name)"
+				}
+			},
+			"description": "User information"
+		},
+		"CardAccount": {
+			"type": "object",
+			"required": ["currencyCode", "currentBalance", "id", "nonBilledAmount", "state"],
+			"properties": {
+				"creditLimit": {
+					"type": "number",
+					"format": "double",
+					"example": 10000.0,
+					"description": "Creditlimit on account"
+				},
+				"currencyCode": {
+					"type": "string",
+					"example": "EUR, GBP, USD",
+					"description": "Originating currency code"
+				},
+				"currentBalance": {
+					"type": "number",
+					"format": "double",
+					"example": 12345.56,
+					"description": "CurrentBalance on account"
+				},
+				"cutOffDate": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "When next invoice will be created"
+				},
+				"disposableAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 12345.56,
+					"description": "Disposable amount on account"
+				},
+				"id": {
+					"type": "string",
+					"example": "Internal Account Identifier",
+					"description": "Internal Account Identifier"
+				},
+				"nextInvoiceDate": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "NextInvoiceDate"
+				},
+				"nonBilledAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 123.45,
+					"description": "Currently nonbilled amount"
+				},
+				"purchaseLimit": {
+					"type": "number",
+					"format": "double",
+					"example": 10000.0,
+					"description": "Purchase Limit"
+				},
+				"state": {
+					"type": "string",
+					"description": "State on account",
+					"enum": ["IN_OPERATION", "SUSPENDED", "CLOSED_NORMALLY", "CLOSED_DUE_TO_DEBT_COLLECTION", "UNKNOWN"]
+				}
+			},
+			"description": "Customer card account object only recived if customer is allowed to se account information"
+		},
+		"CardContract": {
+			"type": "object",
+			"required": ["cardEngagementId", "cards", "currencyCode", "id", "marketSegment", "nonBilledAmount", "owned", "productName", "productType", "serviceLevel", "serviceLevelDescription", "state"],
+			"properties": {
+				"cardAccountId": {
+					"type": "string",
+					"example": "Internal Account Identifier",
+					"description": "Internal Account Identifier"
+				},
+				"cardEngagementId": {
+					"type": "string",
+					"example": "Arrangement Id",
+					"description": "Arrangement Id"
+				},
+				"cards": {
+					"type": "array",
+					"example": "123, 456, 789",
+					"description": "List with Customers cards with state and information",
+					"items": {
+						"$ref": "#/definitions/Card"
+					}
+				},
+				"currencyCode": {
+					"type": "string",
+					"example": "EUR, GBP, USD",
+					"description": "Originating currency code"
+				},
+				"id": {
+					"type": "string",
+					"example": "Internal Contract Identifier",
+					"description": "Internal Contract Identifie"
+				},
+				"marketSegment": {
+					"type": "string",
+					"description": "Market segment of the product",
+					"enum": ["CORPORATE", "PRIVATE", "UNKNOWN"]
+				},
+				"nonBilledAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 123.45,
+					"description": "Currently nonbilled amount"
+				},
+				"owned": {
+					"type": "boolean",
+					"example": false,
+					"description": "Customer is liable for account"
+				},
+				"productName": {
+					"type": "string",
+					"example": "Eurocard Gold",
+					"description": "Name of product"
+				},
+				"productType": {
+					"type": "string",
+					"description": "Type of the product",
+					"enum": ["EC_GOLD", "EC_PLATINUM", "EC_INVITATION", "EC_CORPORATE_LIMIT", "EC_CORPORATE", "EC_CORPORATE_PLATINUM", "UNKNOWN"]
+				},
+				"serviceLevel": {
+					"type": "integer",
+					"format": "int32",
+					"example": "0, 1, 2",
+					"description": "Service Level id"
+				},
+				"serviceLevelDescription": {
+					"type": "string",
+					"example": "Platinum",
+					"description": "Description of Service level"
+				},
+				"state": {
+					"type": "string",
+					"description": "Code identifying Contract State",
+					"enum": ["IN_OPERATION", "SUSPENDED", "CLOSED_NORMALLY", "CLOSED_DUE_TO_DEBT_COLLECTION", "UNKNOWN"]
+				}
+			},
+			"description": "Contains information of the customers card contracts"
+		},
+		"error": {
+			"type": "object",
+			"properties": {
+				"correlationId": {
+					"type": "string"
+				},
+				"developerMessage": {
+					"type": "string"
+				},
+				"errorAttribute": {
+					"type": "string"
+				},
+				"errorCode": {
+					"type": "string"
+				},
+				"moreInformation": {
+					"type": "string"
+				},
+				"supportID": {
+					"type": "string"
+				},
+				"userMessage": {
+					"type": "string"
+				}
+			},
+			"description": "carries error information"
+		},
+		"Card": {
+			"type": "object",
+			"required": ["cardPlasticId", "id", "maskedCardNumber", "mostRecent", "nameOnCard", "physicalCardState", "state"],
+			"properties": {
+				"cardPlasticId": {
+					"type": "integer",
+					"format": "int32",
+					"example": 12345,
+					"description": "Card Plastic identifier"
+				},
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"example": 123456789,
+					"description": "Card identifier"
+				},
+				"maskedCardNumber": {
+					"type": "string",
+					"example": "123456******7890",
+					"description": "Masked CardNumber"
+				},
+				"mostRecent": {
+					"type": "boolean",
+					"example": false,
+					"description": "Customers most recent card"
+				},
+				"nameOnCard": {
+					"type": "string",
+					"example": "ERIC U ROCARD",
+					"description": "Cardholder name printed on card"
+				},
+				"physicalCardState": {
+					"type": "string",
+					"description": "Card state on plastic",
+					"enum": ["NOT_YET_PERSONALIZED", "CUSTOMER_HAS_INACTIVE_CARD", "OPEN", "CLOSED", "UNKNOWN"]
+				},
+				"state": {
+					"type": "string",
+					"description": "Card State, Active/inactive",
+					"enum": ["OPEN_NORMAL", "OPEN_REPLACED", "CLOSED_NORMAL", "CLOSED_BLOCKED", "UNKNOWN"]
+				}
+			},
+			"description": "Customer card objectd"
+		}
+	}
+}

@@ -1,0 +1,238 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0",
+		"contact": {
+			"name": "Reservations"
+		},
+		"license": {}
+	},
+	"host": "secure.eurocard.se",
+	"basePath": "/common/reservations/v1",
+	"tags": [{
+			"name": "reservations-controller",
+			"description": "Reservations Controller"
+		}
+	],
+	"paths": {
+		"/": {
+			"get": {
+				"tags": ["reservations-controller"],
+				"summary": "reservations",
+				"description": "A list of customers reserved transactions",
+				"operationId": "reservations",
+				"consumes": ["application/json"],
+				"produces": ["application/json;charset=UTF-8"],
+				"parameters": [{
+						"name": "cardAccountId",
+						"in": "query",
+						"description": "cardAccountId",
+						"required": false,
+						"type": "string"
+					}, {
+						"name": "cardContractId",
+						"in": "query",
+						"description": "cardContractId",
+						"required": false,
+						"type": "string"
+					}, {
+						"name": "languageCode",
+						"in": "query",
+						"description": "languageCode",
+						"required": false,
+						"type": "string",
+						"default": "EN"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ReservationsResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					},
+					"404": {
+						"description": "Not Found"
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"Reservation": {
+			"type": "object",
+			"required": ["amount", "billingAmount", "billingCurrencyCode", "cardBrandTransaction", "currencyCode", "date", "ecomPurchase", "hasDocument", "id", "manageDocument", "maskedCardNumber", "nameOnCard", "recurringPayment", "specification", "tokenRequestor"],
+			"properties": {
+				"amount": {
+					"type": "number",
+					"format": "double",
+					"example": 250.0,
+					"description": "Transactions original amount "
+				},
+				"billingAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 12345.67,
+					"description": "Transaction Amount billed in local currency"
+				},
+				"billingCurrencyCode": {
+					"type": "string",
+					"example": "SEK, NOK, EUR, DKK",
+					"description": "Currency transaction is billed in"
+				},
+				"cardBrandTransaction": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating own sales establishment"
+				},
+				"cardId": {
+					"type": "integer",
+					"format": "int64",
+					"example": 123456789,
+					"description": "Card identifier"
+				},
+				"city": {
+					"type": "string",
+					"example": "Stockholm, Oslo, Köbenhavn",
+					"description": "City where transaction was made"
+				},
+				"countryCode": {
+					"type": "string"
+				},
+				"currencyCode": {
+					"type": "string",
+					"example": "EUR, GBP, USD",
+					"description": "Originating currency code"
+				},
+				"currencyMarkupPercentage": {
+					"type": "number",
+					"format": "double",
+					"example": 2.0,
+					"description": "Markup percentage"
+				},
+				"date": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "When transaction was made"
+				},
+				"ecomPurchase": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating ecom purchase"
+				},
+				"exchangeRate": {
+					"type": "number",
+					"format": "double",
+					"example": 9.85,
+					"description": "Exchangerate on a transaction made in foregin currency"
+				},
+				"hasDocument": {
+					"type": "boolean",
+					"example": false,
+					"description": "Any additional documents for transaction, could be digital receipt"
+				},
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"example": 123456789012,
+					"description": "Reservation unique identifyer"
+				},
+				"manageDocument": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating if documents can be added for the transaction"
+				},
+				"maskedCardNumber": {
+					"type": "string",
+					"example": "123456******7890",
+					"description": "Masked CardNumber"
+				},
+				"merchantCategoryCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "1234,3300, 6011",
+					"description": "Categorisation code, MCC code"
+				},
+				"nameOnCard": {
+					"type": "string",
+					"example": "ERIC U ROCARD",
+					"description": "Cardholder name printed on card"
+				},
+				"recurringPayment": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating a recurring payment, i.e spotify subscription"
+				},
+				"specification": {
+					"type": "string",
+					"example": "My Store",
+					"description": "Specification on transaction such as merchant name"
+				},
+				"tokenRequestor": {
+					"type": "string",
+					"example": "ApplePay",
+					"description": "TokenRequestorName or wallet name"
+				},
+				"vatAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 25.0,
+					"description": "VAT amount on transaction if availabe"
+				}
+			}
+		},
+		"ReservationsResponse": {
+			"type": "object",
+			"properties": {
+				"error": {
+					"$ref": "#/definitions/error"
+				},
+				"moreDataExists": {
+					"type": "boolean"
+				},
+				"reservations": {
+					"type": "array",
+					"example": "Customer reservations",
+					"description": "A list of reservations",
+					"items": {
+						"$ref": "#/definitions/Reservation"
+					}
+				}
+			},
+			"description": "Carrier for reservations"
+		},
+		"error": {
+			"type": "object",
+			"properties": {
+				"correlationId": {
+					"type": "string"
+				},
+				"developerMessage": {
+					"type": "string"
+				},
+				"errorAttribute": {
+					"type": "string"
+				},
+				"errorCode": {
+					"type": "string"
+				},
+				"moreInformation": {
+					"type": "string"
+				},
+				"supportID": {
+					"type": "string"
+				},
+				"userMessage": {
+					"type": "string"
+				}
+			},
+			"description": "carries error information"
+		}
+	}
+}

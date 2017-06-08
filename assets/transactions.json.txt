@@ -1,0 +1,352 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0",
+		"contact": {
+			"name": "Transactions"
+		},
+		"license": {}
+	},
+	"host": "secure.eurocard.se",
+	"basePath": "/common/transactions/v1",
+	"tags": [{
+			"name": "transactions-controller",
+			"description": "Transactions Controller"
+		}
+	],
+	"paths": {
+		"/": {
+			"get": {
+				"tags": ["transactions-controller"],
+				"summary": "transactions",
+				"description": "A list of customers transactions and additional info when available",
+				"operationId": "transactions",
+				"consumes": ["application/json"],
+				"produces": ["application/json;charset=UTF-8"],
+				"parameters": [{
+						"name": "cardAccountId",
+						"in": "query",
+						"description": "cardAccountId",
+						"required": false,
+						"type": "string"
+					}, {
+						"name": "cardContractId",
+						"in": "query",
+						"description": "cardContractId",
+						"required": false,
+						"type": "string"
+					}, {
+						"name": "advised",
+						"in": "query",
+						"description": "advised",
+						"required": false,
+						"type": "boolean"
+					}, {
+						"name": "fromDate",
+						"in": "query",
+						"description": "fromDate",
+						"required": false,
+						"type": "string"
+					}, {
+						"name": "toDate",
+						"in": "query",
+						"description": "toDate",
+						"required": false,
+						"type": "string"
+					}, {
+						"name": "languageCode",
+						"in": "query",
+						"description": "languageCode",
+						"required": false,
+						"type": "string",
+						"default": "EN"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/TransactionsResponse"
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					},
+					"404": {
+						"description": "Not Found"
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"Transaction": {
+			"type": "object",
+			"required": ["amount", "billingAmount", "billingCurrencyCode", "cardBrandTransaction", "currencyCode", "date", "ecomPurchase", "hasDocument", "id", "manageDocument", "maskedCardNumber", "nameOnCard", "recurringPayment", "specification", "type"],
+			"properties": {
+				"amount": {
+					"type": "number",
+					"format": "double",
+					"example": 250.0,
+					"description": "Transactions original amount "
+				},
+				"billingAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 12345.67,
+					"description": "Transaction Amount billed in local currency"
+				},
+				"billingCurrencyCode": {
+					"type": "string",
+					"example": "SEK, NOK, EUR, DKK",
+					"description": "Currency transaction is billed in"
+				},
+				"cardBrandTransaction": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating own sales establishment"
+				},
+				"cardId": {
+					"type": "integer",
+					"format": "int64",
+					"example": 123456789,
+					"description": "Card identifier"
+				},
+				"city": {
+					"type": "string",
+					"example": "Stockholm, Oslo, Köbenhavn",
+					"description": "City where transaction was made"
+				},
+				"countryCode": {
+					"type": "string"
+				},
+				"currencyCode": {
+					"type": "string",
+					"example": "EUR, GBP, USD",
+					"description": "Originating currency code"
+				},
+				"currencyMarkupPercentage": {
+					"type": "number",
+					"format": "double",
+					"example": 2.0,
+					"description": "Markup percentage"
+				},
+				"date": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "When transaction was made"
+				},
+				"ecomPurchase": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating ecom purchase"
+				},
+				"exchangeRate": {
+					"type": "number",
+					"format": "double",
+					"example": 9.85,
+					"description": "Exchangerate on a transaction made in foregin currency"
+				},
+				"firstPossibleBillingDate": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "First date when transaction can be billed"
+				},
+				"flightInformation": {
+					"$ref": "#/definitions/FlightInformation"
+				},
+				"hasDocument": {
+					"type": "boolean",
+					"example": false,
+					"description": "Any additional documents for transaction, could be digital receipt"
+				},
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"example": 123456789012,
+					"description": "Transactions unique identifyer"
+				},
+				"invoiceReference": {
+					"type": "string",
+					"example": "12345678",
+					"description": "Reference to a specific invoicereference"
+				},
+				"lineItemInformation": {
+					"type": "array",
+					"example": "List with discount details for example",
+					"description": "List with lineitem details could be discount details",
+					"items": {
+						"$ref": "#/definitions/LineItemInformation"
+					}
+				},
+				"manageDocument": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating if documents can be added for the transaction"
+				},
+				"maskedCardNumber": {
+					"type": "string",
+					"example": "123456******7890",
+					"description": "Masked CardNumber"
+				},
+				"merchantCategoryCode": {
+					"type": "integer",
+					"format": "int32",
+					"example": "1234,3300, 6011",
+					"description": "Categorisation code, MCC code"
+				},
+				"nameOnCard": {
+					"type": "string",
+					"example": "ERIC U ROCARD",
+					"description": "Cardholder name printed on card"
+				},
+				"postingDate": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "When transaction was made"
+				},
+				"recurringPayment": {
+					"type": "boolean",
+					"example": false,
+					"description": "Flag indicating a recurring payment, i.e spotify subscription"
+				},
+				"relatedTransactionId": {
+					"type": "integer",
+					"format": "int64",
+					"description": "This transaction relates to another transaction"
+				},
+				"specification": {
+					"type": "string",
+					"example": "My Store",
+					"description": "Specification on transaction such as merchant name"
+				},
+				"tokenRequestorName": {
+					"type": "string",
+					"example": "ApplePay",
+					"description": "TokenRequestorName or wallet name"
+				},
+				"type": {
+					"type": "string",
+					"example": "10,20,30 ",
+					"description": "Type of transaction, see documentation",
+					"enum": ["PAYMENT", "DISBURSEMENT", "CIG_PAYMENT", "PURCHASE", "BONUS", "FEE", "INTEREST", "DISCOUNT", "LOUNGE_VISIT", "UNKNOWN"]
+				},
+				"vatAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 25.0,
+					"description": "VAT amount on transaction if availabe"
+				}
+			}
+		},
+		"TransactionsResponse": {
+			"type": "object",
+			"properties": {
+				"error": {
+					"$ref": "#/definitions/error"
+				},
+				"moreDataExists": {
+					"type": "boolean"
+				},
+				"transactions": {
+					"type": "array",
+					"example": "transactions-AirlineAdditionalInfo if available-LineItemInfo if available",
+					"description": "A list of transactions",
+					"items": {
+						"$ref": "#/definitions/Transaction"
+					}
+				}
+			},
+			"description": "Carrier for transactions"
+		},
+		"error": {
+			"type": "object",
+			"properties": {
+				"correlationId": {
+					"type": "string"
+				},
+				"developerMessage": {
+					"type": "string"
+				},
+				"errorAttribute": {
+					"type": "string"
+				},
+				"errorCode": {
+					"type": "string"
+				},
+				"moreInformation": {
+					"type": "string"
+				},
+				"supportID": {
+					"type": "string"
+				},
+				"userMessage": {
+					"type": "string"
+				}
+			},
+			"description": "carries error information"
+		},
+		"FlightInformation": {
+			"type": "object",
+			"properties": {
+				"departureDate": {
+					"type": "string",
+					"example": "YYYY-MM-DD",
+					"description": "Departuredate "
+				},
+				"iataName": {
+					"type": "string",
+					"example": "Scandinavian Airlines, KLM, Lufthansa",
+					"description": "IATA Name"
+				},
+				"passengerName": {
+					"type": "string",
+					"example": "Eric U Rochard",
+					"description": "Passengername on ticket"
+				},
+				"ticketNumber": {
+					"type": "string",
+					"example": "111-2222222-3333",
+					"description": "ticketNumber"
+				},
+				"travelRoute": {
+					"type": "string",
+					"example": "travelroute.example",
+					"description": "travelroute"
+				}
+			}
+		},
+		"LineItemInformation": {
+			"type": "object",
+			"required": ["netAmount", "vatAmount"],
+			"properties": {
+				"merchandiseDescription": {
+					"type": "string",
+					"example": "Airline carrier",
+					"description": "A description of merchant"
+				},
+				"netAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 100.0,
+					"description": "Net amount on transaction"
+				},
+				"vatAmount": {
+					"type": "number",
+					"format": "double",
+					"example": 25.0,
+					"description": "VAT amount on transaction if availabe"
+				},
+				"vatPercentage": {
+					"type": "number",
+					"format": "double",
+					"example": 25.0,
+					"description": "VAT Percentage if applicable and available"
+				}
+			}
+		}
+	}
+}
